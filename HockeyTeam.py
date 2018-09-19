@@ -27,6 +27,22 @@ class Team(object):
         self.ppGoals = []
         self.shGoals = []
 
+        # Calculated player weights
+        self.topLine = 0
+        self.secondLine = 0
+        self.defForward = 0
+        self.physForward = 0
+        self.offDefence = 0
+        self.defDefence = 0
+        self.avDefence = 0
+        self.physDefence = 0
+
+        # Calculated goalie weights
+        self.goalieSavePct = 0
+        self.goalieWins = 0
+        self.goalieGaa = 0
+        
+
     def getTeamName(self): return self.teamName
 
     # Win / Loss / OT Loss functions
