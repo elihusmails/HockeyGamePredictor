@@ -3,7 +3,7 @@ import json
 import numpy as np
 import os
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_classification
+#from sklearn.datasets import make_classification
 import matplotlib.pyplot as plt
 from HockeyTeam import Team
 from sklearn import tree
@@ -44,11 +44,15 @@ for d in sortedList:
     else:
         opponent = Team(opponentName)
 
+    # Goals
+    team.goalsFor.append(d['goalsFor'])
+    team.goalsAgainst.append(d['goalsAgainst'])
+
     # Update shots count
     team.teamShotsFor.append(d['shotsFor'])
     opponent.teamShotsFor.append(d['shotsAgainst'])
     team.teamShotsAgainst.append(d['shotsAgainst'])
-    opponent.teamShotsAgainst.append(d['shotsFor'])
+    opponent.teamShotsAgainst.append(d['shotsAgainst'])
 
     # Update faceoff count
     team.teamFaceoffWon.append(d['faceoffsWon'])
@@ -80,6 +84,13 @@ for d in sortedList:
 #################################
 ####  End Load the Team data  ###
 #################################
+
+# Calculate and print PDO values for teams
+# teamPdo = dict()
+# for tx in teams:
+#     team = teams[tx]
+#     teamPdo[tx] = team.getTeamPDO()
+# print( sorted(teamPdo.items(), key=lambda kv: kv[1]) )
 
 ### Load goalie data
 goalies = cp.import_goalies('2017-18_goalies.json')
@@ -201,6 +212,8 @@ for index,row in gameData.iterrows():
         'goalieWins': team.goalieWins,
         'goalieGaa': team.goalieGaa,
 
+        'pdo': team.getTeamPDO(),
+
         'win': np.where(goalsFor > goalsAgainst, True, False),
         # 'is_train': np.random.uniform(0, 1) <= .9
     }, ignore_index=True)
@@ -219,7 +232,7 @@ print('Number of observations in the test data:', len(test))
 
 clf = tree.DecisionTreeClassifier() #n_jobs=2, n_estimators=15, random_state=0)
 
-features = records.columns[:21]
+features = records.columns[:22]
 # print("Features: ", features)
 
 trainWin = train['win'].apply(pd.to_numeric)
@@ -237,9 +250,9 @@ for i, j in zip(prediction, test['win']):
 
 ratio = count / total
 print( "Percentage guess correct: {}".format(ratio) )
-# importances = list(zip(train[features], clf.feature_importances_))
-# for impt in importances:
-#     print( impt[0] + "\t\t" + str(impt[1]) )
+importances = list(zip(train[features], clf.feature_importances_))
+for impt in importances:
+    print( impt[0] + "\t\t" + str(impt[1]) )
 
 # print(list(zip(train[features], clf.feature_importances_)))
 print(accuracy)

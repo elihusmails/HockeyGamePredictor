@@ -9,13 +9,14 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def normalize(data):
     for i, f in data.iterrows():
-        data.set_value(i, 'Goals', 60 * f[4] / f[9])
-        data.set_value(i, 'Assists', 60 * f[5] / f[9])
-        data.set_value(i, 'Points', 60 * f[6] / f[9])
-        data.set_value(i, 'PM', 60 * f[7] / f[9])
-        data.set_value(i, 'PIM', 60 * f[8] / f[9])
-        data.set_value(i, 'Blocks', 60 * f[10] / f[9])
-        data.set_value(i, 'Hits', 60 * f[11] / f[9])
+        # data.set_value(i, 'Goals', 60 * f[4] / f[9])
+        data.at[i, 'Goals'] = 60 * f[4] / f[9]
+        data.at[i, 'Assists'] = 60 * f[5] / f[9]
+        data.at[i, 'Points'] = 60 * f[6] / f[9]
+        data.at[i, 'PM'] = 60 * f[7] / f[9]
+        data.at[i, 'PIM'] = 60 * f[8] / f[9]
+        data.at[i, 'Blocks'] = 60 * f[10] / f[9]
+        data.at[i, 'Hits'] = 60 * f[11] / f[9]
 
     means = [np.mean(data['Goals']), np.mean(data['Assists']),
              np.mean(data['Points']), np.mean(data['PM']),
@@ -27,13 +28,13 @@ def normalize(data):
                np.std(data['Hits'])]
 
     for i, f in data.iterrows():
-        data.set_value(i, 'Goals', (f[4] - means[0]) / std_dev[0])
-        data.set_value(i, 'Assists', (f[5] - means[1]) / std_dev[1])
-        data.set_value(i, 'Points', (f[6] - means[2]) / std_dev[2])
-        data.set_value(i, 'PM', (f[7] - means[3]) / std_dev[3])
-        data.set_value(i, 'PIM', (f[8] - means[4]) / std_dev[4])
-        data.set_value(i, 'Blocks', (f[10] - means[5]) / std_dev[5])
-        data.set_value(i, 'Hits', (f[11] - means[6]) / std_dev[6])
+        data.at[i, 'Goals'] = (f[4] - means[0]) / std_dev[0]
+        data.at[i, 'Assists'] = (f[5] - means[1]) / std_dev[1]
+        data.at[i, 'Points'] = (f[6] - means[2]) / std_dev[2]
+        data.at[i, 'PM'] = (f[7] - means[3]) / std_dev[3]
+        data.at[i, 'PIM'] = (f[8] - means[4]) / std_dev[4]
+        data.at[i, 'Blocks'] = (f[10] - means[5]) / std_dev[5]
+        data.at[i, 'Hits'] = (f[11] - means[6]) / std_dev[6]
 
     return data
 

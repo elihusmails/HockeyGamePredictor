@@ -1,3 +1,4 @@
+import math
 
 class Team(object):
 
@@ -93,3 +94,17 @@ class Team(object):
         pp = sum(self.powerplays[(x*-1):])
         sh = sum(self.shorthanded[(x*-1):])
         return pp/(pp+sh)
+
+    def getTeamPDO(self):
+        totalShots = sum(self.teamShotsFor)
+        totalGoals = sum(self.goalsFor)
+        shootingPercentage = totalGoals / totalShots
+
+        shotsAgainst = sum(self.teamShotsAgainst)
+        goalsAgainst = sum(self.goalsAgainst)
+        savePercentage = 1 - (goalsAgainst / shotsAgainst)
+
+        pdo = shootingPercentage + savePercentage
+        
+        # return (pdo ** 2) * 100
+        return math.log(pdo) * 1000
